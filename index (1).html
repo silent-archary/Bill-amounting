@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Solar Billing Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      padding: 20px;
+    }
+    h2 {
+      color: #333;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 10px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .output {
+      background: white;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Solar System Billing Calculator</h2>
+
+  <label for="totalAmount">Total Amount (₹):</label>
+  <input type="number" id="totalAmount" placeholder="Enter total amount (e.g. 100000)">
+
+  <label for="systemCapacity">System Capacity (kW):</label>
+  <input type="number" id="systemCapacity" placeholder="Enter system capacity (e.g. 3.27)" step="0.01">
+
+  <button onclick="calculateBill()">Calculate</button>
+
+  <div class="output" id="result"></div>
+
+  <script>
+    function calculateBill() {
+      const total = parseFloat(document.getElementById("totalAmount").value);
+      const capacity = parseFloat(document.getElementById("systemCapacity").value);
+
+      if (isNaN(total) || isNaN(capacity) || total <= 0 || capacity <= 0) {
+        alert("Please enter valid numbers for both Total Amount and System Capacity.");
+        return;
+      }
+
+      // Split the total amount
+      const part12WithTax = total * 0.70;
+      const part18WithTax = total * 0.30;
+
+      // Remove tax to get base amounts
+      const base12 = part12WithTax / 1.12;
+      const base18 = part18WithTax / 1.18;
+
+      // Calculate per kW rates
+      const perKw12 = base12 / capacity;
+      const perKw18 = base18 / capacity;
+
+      // Output results
+      const resultHTML = `
+        <strong>Total Amount:</strong> ₹${total.toFixed(2)}<br>
+        <strong>System Capacity:</strong> ${capacity.toFixed(2)} kW<br><br>
+
+        <strong>70% of Amount @ 12% GST:</strong><br>
+        Amount with Tax: ₹${part12WithTax.toFixed(2)}<br>
+        Base (Without Tax): ₹${base12.toFixed(2)}<br>
+        Per kW Rate: ₹${perKw12.toFixed(2)}<br><br>
+
+        <strong>30% of Amount @ 18% GST:</strong><br>
+        Amount with Tax: ₹${part18WithTax.toFixed(2)}<br>
+        Base (Without Tax): ₹${base18.toFixed(2)}<br>
+        Per kW Rate: ₹${perKw18.toFixed(2)}
+      `;
+
+      document.getElementById("result").innerHTML = resultHTML;
+    }
+  </script>
+
+</body>
+</html>
